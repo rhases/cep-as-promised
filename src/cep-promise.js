@@ -2,6 +2,7 @@
 
 import fetchCorreios from './services/correios.js'
 import fetchViaCep from './services/viacep.js'
+import fetchGoogle from './services/google.js'
 import CepPromiseError from './errors/cep-promise.js'
 import Promise from './utils/promise-any.js'
 
@@ -62,7 +63,8 @@ export default function (cepRawValue) {
     function fetchCepFromServices (cepWithLeftPad) {
       return Promise.any([
         fetchCorreios(cepWithLeftPad),
-        fetchViaCep(cepWithLeftPad)
+        fetchViaCep(cepWithLeftPad),
+        fetchGoogle(cepWithLeftPad)
       ])
     }
 
