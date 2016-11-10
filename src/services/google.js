@@ -7,7 +7,7 @@ import Promise from 'bluebird'
 function fetchGoogleService (cepWithLeftPad) {
 
   return new Promise((resolve, reject) => {
-    const url = `//maps.googleapis.com/maps/api/geocode/json?address=${cepWithLeftPad}`
+    const url = `//maps.googleapis.com/maps/api/geocode/json?address=${cepWithLeftPad}&components=country:BR`
     const options = {
       method: 'GET',
       mode: 'cors',
@@ -44,15 +44,16 @@ function fetchGoogleService (cepWithLeftPad) {
     }
 
     function extractSecondGoogleRequest (response) {
+      // console.log(response.latLngInfo.results[0].address_components)
       const correctAddressComponent = response.latLngInfo.results
         .map(result => {
           return result.address_components
         })
-        .filter(address_components => {
-          return address_components.filter(ac => { 
-            return ac.long_name.replace('-', '') === response.currentCepInfo.cep
-          }).length > 0
-        })
+        // .filter(address_components => {
+        //   return address_components.filter(ac => { 
+        //     return ac.long_name.substring(0, 4) === response.currentCepInfo.cep
+        //   }).length > 0
+        // })
         .filter(maybeStreet => {
           return maybeStreet.filter(ac => {
             return ac.types.indexOf('route') !== -1
@@ -60,7 +61,7 @@ function fetchGoogleService (cepWithLeftPad) {
         })[0]
       const street = correctAddressComponent.filter(ac => 
         ac.types.indexOf('route') !== -1)[0].short_name
-      return Object.assign({}, response.currentCepInfo, { street: street } )
+      return Object.assign({}, response.currentCepInfo, { street, cep: cepWithLeftPad } )
     }
 
     function analyzeAndParseResponse (response) {
@@ -94,7 +95,7 @@ function fetchGoogleService (cepWithLeftPad) {
       const lng = responseObject.results[0].geometry.location.lng
       return {
         currentCepInfo: {
-          cep: extractGoogleAdressComponent(responseObject, 'postal_code').replace('-', ''),
+          cep: extractGoogleAdressComponent(responseObject, 'postal_code'),
           state: extractGoogleAdressComponent(responseObject, 'administrative_area_level_1'),
           city: extractGoogleAdressComponent(responseObject, 'administrative_area_level_2'),
           neighborhood: extractGoogleAdressComponent(responseObject, 'sublocality'),
