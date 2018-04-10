@@ -1,54 +1,47 @@
 {
-  "name": "cep-promise",
-  "version": "3.0.0",
-  "description": "Busca por CEP integrado diretamente aos serviços dos Correios e ViaCEP",
-  "main": "dist/cep-promise.js",
-  "module": "dist/cep-promise-esm.js",
-  "jsnext:main": "dist/cep-promise-esm.js",
-  "scripts": {
-    "test": "npm run coverage",
-    "coverage": "babel-node node_modules/.bin/babel-istanbul cover _mocha -- --timeout 60000 test/**/*.spec.js",
-    "test-unit": "mocha --compilers js:babel-core/register test/unit/**/*.spec.js",
-    "test-unit-watch": "mocha --watch --compilers js:babel-core/register test/unit/**/*.spec.js",
-    "test-e2e": "mocha --compilers js:babel-core/register test/e2e/**/*.spec.js",
-    "test-e2e-watch": "mocha --watch --compilers js:babel-core/register test/e2e/**/*.spec.js",
-    "lint-check": "standard",
-    "lint-fix": "standard --fix",
-    "build": "rollup -c && uglifyjs dist/cep-promise-browser.js -cm -o dist/cep-promise-browser.min.js",
-    "prepublish": "npm run build"
+  "name": "cep-as-promised",
+  "version": "3.0.1",
+  "description": "ES6 Packaging fork do CEP Promise: Busca por CEP integrado diretamente aos serviços dos Correios e ViaCEP",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "typescript": {
+    "definition": "definitions/index"
   },
-  "browser": {
-    "./src/services/correios.js": "./src/services/correios-browser.js",
-    "./src/services/cepaberto.js": "./src/services/cepaberto-browser.js"
+  "scripts": {
+    "test": "mocha -r ts-node/register test/**/*.spec.ts",
+    "clean": "rm -rf dist/",
+    "precompile": "npm run clean",
+    "compile": "tsc",
+    "prepublish": "npm run compile",
+    "release": "standard-version"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/filipedeschamps/cep-promise.git"
+    "url": "https://github.com/rhases/cep-as-promised.git"
   },
-  "author": "Filipe Deschamps",
+  "author": "Gabriel Rodrigues",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/filipedeschamps/cep-promise/issues"
+    "url": "https://github.com/rhases/cep-as-promised/issues"
   },
-  "homepage": "https://github.com/filipedeschamps/cep-promise",
+  "homepage": "https://github.com/rhases/cep-as-promised",
   "devDependencies": {
-    "babel-cli": "6.18.0",
-    "babel-core": "6.18.2",
-    "babel-eslint": "7.1.1",
-    "babel-istanbul": "0.11.0",
-    "babel-plugin-external-helpers": "6.22.0",
-    "babel-preset-env": "1.6.1",
-    "chai": "3.5.0",
-    "chai-as-promised": "6.0.0",
-    "chai-subset": "1.3.0",
-    "mocha": "3.2.0",
-    "nock": "9.0.2",
-    "rollup": "0.56.0",
-    "rollup-plugin-babel": "3.0.3",
-    "rollup-plugin-commonjs": "8.3.0",
-    "rollup-plugin-node-resolve": "3.0.3",
-    "standard": "8.6.0",
-    "uglify-js": "2.7.5"
+    "@types/chai": "^4.0.4",
+    "@types/chai-as-promised": "^7.1.0",
+    "@types/chai-subset": "^1.3.1",
+    "@types/mocha": "^2.2.43",
+    "@types/node": "^8.0.30",
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "chai-subset": "^1.6.0",
+    "lodash": "^4.17.5",
+    "mocha": "^3.5.3",
+    "nock": "^9.2.4",
+    "ntypescript": "^1.201706190042.1",
+    "q": "^1.5.0",
+    "standard-version": "^3.0.0",
+    "ts-node": "^3.2.0",
+    "typescript": "^2.5.2"
   },
   "standard": {
     "parser": "babel-eslint",
@@ -60,11 +53,10 @@
   },
   "dependencies": {
     "isomorphic-fetch": "2.2.1",
-    "lodash.get": "4.4.2",
     "xml2js": "0.4.17"
   },
-  "files": [
-    "dist",
-    "index.d.ts"
-  ]
+  "peerDependencies": {
+    "q": "^1.5.0",
+    "lodash": "^4.17.5"
+  }
 }

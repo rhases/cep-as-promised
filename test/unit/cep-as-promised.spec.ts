@@ -1,18 +1,13 @@
 'use strict'
 
-import chai from 'chai'
-import chaiAsPromised from 'chai-as-promised'
-import chaiSubset from 'chai-subset'
-import nock from 'nock'
-import path from 'path'
+import { expect } from 'chai';
+import '../setup';
 
-import cep from '../../src/cep-promise.js'
-import CepPromiseError from '../../src/errors/cep-promise.js'
+import * as nock from 'nock';
+import * as path  from 'path';
 
-chai.use(chaiAsPromised)
-chai.use(chaiSubset)
-
-let expect = chai.expect
+import cep from '../../src/cep-as-promised'
+import CepPromiseError from '../../src/errors/cep-promise'
 
 describe('cep-promise (unit)', () => {
   describe('when imported', () => {
@@ -41,7 +36,7 @@ describe('cep-promise (unit)', () => {
 
   describe('when invoked without arguments', () => {
     it('should reject with "validation_error"', () => {
-      return cep()
+      return cep(undefined)
         .catch((error) => {
           return expect(error)
             .to.be.an.instanceOf(CepPromiseError)

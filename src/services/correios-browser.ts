@@ -1,6 +1,6 @@
 'use strict'
 
-import ServiceError from '../errors/service.js'
+import ServiceError from '../errors/service'
 
 /*
   * This is a mock service to be used when Browserify

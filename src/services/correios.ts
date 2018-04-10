@@ -1,18 +1,18 @@
 'use strict'
 
-import xml2js from 'xml2js'
-import _get from 'lodash.get'
-import fetch from 'isomorphic-fetch'
-import ServiceError from '../errors/service.js'
+require('isomorphic-fetch');
 
-const parseXMLString = xml2js.parseString
+import { parseString } from 'xml2js';
+import * as _ from 'lodash';
+import ServiceError from '../errors/service';
+import * as Q from 'q';
 
 export default function fetchCorreiosService (cepWithLeftPad) {
   const url = 'https://apps.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente'
   const options = {
     method: 'POST',
     body: `<?xml version="1.0"?>\n<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cli="http://cliente.bean.master.sigep.bsb.correios.com.br/">\n  <soapenv:Header />\n  <soapenv:Body>\n    <cli:consultaCEP>\n      <cep>${cepWithLeftPad}</cep>\n    </cli:consultaCEP>\n  </soapenv:Body>\n</soapenv:Envelope>`,
-    mode: 'no-cors',
+    //mode: 'no-cors',
     headers: {
       'Content-Type': 'text/xml; charset=utf-8',
       'cache-control': 'no-cache'
@@ -38,19 +38,19 @@ function analyzeAndParseResponse (response) {
 }
 
 function parseXML (xmlString) {
-  return new Promise((resolve, reject) => {
-    parseXMLString(xmlString, (err, responseObject) => {
+  var def = Q.defer();
+  parseString(xmlString, (err, responseObject) => {
       if (!err) {
-        return resolve(responseObject)
+        def.resolve(responseObject);
       }
-
-      throw new Error('Não foi possível interpretar o XML de resposta.')
-    })
-  })
+      def.reject(new Error('Não foi possível interpretar o XML de resposta.'))
+  });
+  
+  return def.promise;
 }
 
 function extractErrorMessage (xmlObject) {
-  return _get(xmlObject, 'soap:Envelope.soap:Body[0].soap:Fault[0].faultstring[0]')
+  return _.get(xmlObject, 'soap:Envelope.soap:Body[0].soap:Fault[0].faultstring[0]')
 }
 
 function throwCorreiosError (translatedErrorMessage) {
@@ -58,14 +58,14 @@ function throwCorreiosError (translatedErrorMessage) {
 }
 
 function extractValuesFromSuccessResponse (xmlObject) {
-  let addressValues = _get(xmlObject, 'soap:Envelope.soap:Body[0].ns2:consultaCEPResponse[0].return[0]')
+  let addressValues = _.get(xmlObject, 'soap:Envelope.soap:Body[0].ns2:consultaCEPResponse[0].return[0]')
 
   return {
-    cep: _get(addressValues, 'cep[0]'),
-    state: _get(addressValues, 'uf[0]'),
-    city: _get(addressValues, 'cidade[0]'),
-    neighborhood: _get(addressValues, 'bairro[0]'),
-    street: _get(addressValues, 'end[0]')
+    cep: _.get(addressValues, 'cep[0]'),
+    state: _.get(addressValues, 'uf[0]'),
+    city: _.get(addressValues, 'cidade[0]'),
+    neighborhood: _.get(addressValues, 'bairro[0]'),
+    street: _.get(addressValues, 'end[0]')
   }
 }
 

@@ -1,10 +1,10 @@
 'use strict'
 
 import fetch from 'isomorphic-fetch'
-import ServiceError from '../errors/service.js'
+import ServiceError from '../errors/service'
 
 export default function fetchCepAbertoService (cepWithLeftPad) {
-  const url = `http://www.cepaberto.com/api/v2/ceps.json?cep=${cepWithLeftPad}`
+  const url = `https://cors.now.sh/http://www.cepaberto.com/api/v2/ceps.json?cep=${cepWithLeftPad}`
   const options = {
     method: 'GET',
     mode: 'cors',

@@ -1,15 +1,16 @@
 'use strict'
 
-import fetchCorreios from './services/correios.js'
-import fetchViaCep from './services/viacep.js'
-import fetchCepAberto from './services/cepaberto.js'
-import CepPromiseError from './errors/cep-promise.js'
-import Promise from './utils/promise-any.js'
+import fetchCorreios from './services/correios'
+import fetchViaCep from './services/viacep'
+import fetchCepAberto from './services/cepaberto'
+import CepPromiseError from './errors/cep-promise'
+import { any } from './utils/promise-any';
+import * as Q from 'q';
 
 const CEP_SIZE = 8
 
 export default function (cepRawValue) {
-  return Promise.resolve(cepRawValue)
+  return Q.when(cepRawValue)
     .then(validateInputType)
     .then(removeSpecialCharacters)
     .then(validateInputLength)
@@ -42,6 +43,7 @@ function removeSpecialCharacters (cepRawValue) {
 
 function leftPadWithZeros (cepCleanValue) {
   return '0'.repeat(CEP_SIZE - cepCleanValue.length) + cepCleanValue
+  // return cepCleanValue;
 }
 
 function validateInputLength (cepWithLeftPad) {
@@ -60,10 +62,10 @@ function validateInputLength (cepWithLeftPad) {
 }
 
 function fetchCepFromServices (cepWithLeftPad) {
-  return Promise.any([
+  return any([
     fetchCorreios(cepWithLeftPad),
     fetchViaCep(cepWithLeftPad),
-    fetchCepAberto(cepWithLeftPad)
+    fetchCepAberto(cepWithLeftPad) 
   ])
 }
 

@@ -1,15 +1,16 @@
 'use strict'
 
-import fetch from 'isomorphic-fetch'
-import ServiceError from '../errors/service.js'
+require('isomorphic-fetch');
+import ServiceError from '../errors/service';
 
-export default function fetchViaCepService (cepWithLeftPad) {
-  const url = `https://viacep.com.br/ws/${cepWithLeftPad}/json/`
+export default function fetchCepAbertoService (cepWithLeftPad) {
+  const url = `http://www.cepaberto.com/api/v2/ceps.json?cep=${cepWithLeftPad}`
   const options = {
     method: 'GET',
-    mode: 'cors',
+    //mode: 'cors',
     headers: {
-      'content-type': 'application/json;charset=utf-8'
+      'content-type': 'application/json;charset=utf-8',
+      'Authorization': 'Token token="37bfda18fd4b423cdb6748d14ba30aa6"'
     }
   }
 
@@ -24,23 +25,21 @@ function analyzeAndParseResponse (response) {
   if (response.ok) {
     return response.json()
   }
-
-  throw Error('Erro ao se conectar com o serviço ViaCEP.')
+  throw Error('Erro ao se conectar com o serviço Cep Aberto.')
 }
 
 function checkForViaCepError (responseObject) {
-  if (responseObject.erro === true) {
-    throw new Error('CEP não encontrado na base do ViaCEP.')
+  if (!Object.keys(responseObject).length) {
+    throw new Error('CEP não encontrado na base do Cep Aberto.')
   }
-
   return responseObject
 }
 
 function extractCepValuesFromResponse (responseObject) {
   return {
-    cep: responseObject.cep.replace('-', ''),
-    state: responseObject.uf,
-    city: responseObject.localidade,
+    cep: responseObject.cep,
+    state: responseObject.estado,
+    city: responseObject.cidade,
     neighborhood: responseObject.bairro,
     street: responseObject.logradouro
   }
@@ -49,11 +48,11 @@ function extractCepValuesFromResponse (responseObject) {
 function throwApplicationError (error) {
   const serviceError = new ServiceError({
     message: error.message,
-    service: 'viacep'
+    service: 'cepaberto'
   })
 
   if (error.name === 'FetchError') {
-    serviceError.message = 'Erro ao se conectar com o serviço ViaCEP.'
+    serviceError.message = 'Erro ao se conectar com o serviço Cep Aberto.'
   }
 
   throw serviceError
