@@ -1,6 +1,6 @@
 {
   "name": "cep-as-promised",
-  "version": "3.0.5",
+  "version": "3.0.6",
   "description": "ES6 Packaging fork do CEP Promise: Busca por CEP integrado diretamente aos serviços dos Correios e ViaCEP",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
