@@ -1,16 +1,15 @@
 'use strict'
 
-require('isomorphic-fetch');
 import ServiceError from '../errors/service';
 
 export default function fetchCepAbertoService (cepWithLeftPad) {
-  const url = `http://www.cepaberto.com/api/v2/ceps.json?cep=${cepWithLeftPad}`
-  const options = {
+  const url = `https://cors.now.sh/http://www.cepaberto.com/api/v3/cep?cep=${cepWithLeftPad}`
+  const options: RequestInit = {
     method: 'GET',
-    //mode: 'cors',
+    mode: 'cors',
     headers: {
       'content-type': 'application/json;charset=utf-8',
-      'Authorization': 'Token token="37bfda18fd4b423cdb6748d14ba30aa6"'
+      'Authorization': 'Token token="a9785cc4e6441ba56cc4d35a627998ce"'
     }
   }
 

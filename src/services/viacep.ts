@@ -1,6 +1,5 @@
 'use strict'
 
-require('isomorphic-fetch');
 import ServiceError from '../errors/service';
 
 export default function fetchViaCepService (cepWithLeftPad) {

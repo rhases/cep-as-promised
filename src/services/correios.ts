@@ -1,7 +1,5 @@
 'use strict'
 
-require('isomorphic-fetch');
-
 import { parseString } from 'xml2js';
 import * as _ from 'lodash';
 import ServiceError from '../errors/service';
