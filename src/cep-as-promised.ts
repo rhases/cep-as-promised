@@ -3,6 +3,7 @@
 import fetchCorreios from './services/correios'
 import fetchViaCep from './services/viacep'
 import fetchCepAberto from './services/cepaberto'
+import fetchCepAbertoBrowser from './services/cepaberto-browser'
 import CepPromiseError from './errors/cep-promise'
 import { any } from './utils/promise-any';
 import * as Q from 'q';
@@ -16,6 +17,17 @@ export default function (cepRawValue) {
     .then(validateInputLength)
     .then(leftPadWithZeros)
     .then(fetchCepFromServices)
+    .catch(handleServicesError)
+    .catch(throwApplicationError)
+}
+
+export function cepBrowser(cepRawValue) {
+  return Q.when(cepRawValue)
+    .then(validateInputType)
+    .then(removeSpecialCharacters)
+    .then(validateInputLength)
+    .then(leftPadWithZeros)
+    .then(fetchCepFromServicesBrowser)
     .catch(handleServicesError)
     .catch(throwApplicationError)
 }
@@ -66,6 +78,13 @@ function fetchCepFromServices (cepWithLeftPad) {
     fetchCorreios(cepWithLeftPad),
     fetchViaCep(cepWithLeftPad),
     fetchCepAberto(cepWithLeftPad) 
+  ])
+}
+
+function fetchCepFromServicesBrowser(cepWithLeftPad) {
+  return any([
+    fetchViaCep(cepWithLeftPad),
+    fetchCepAbertoBrowser(cepWithLeftPad)
   ])
 }
 

@@ -141,24 +141,12 @@ cep('123456789123456789')
 #### npm
 
 ```
-$ npm install --save cep-promise
+$ npm install --save cep-as-promised
 ```
 
-#### Bower
-
-```
-$ bower install --save cep-promise
-```
-
-#### Browser
-Caso você utilize o `browserify` para gerenciamento de dependência no browser, importe a versão **otimizada** com o seguinte path:
-
-```
-require('/dist/cep-promise-browser.min.js')
-```
 
 #### Webpack
-É possível configurar o `webpack.config.js` trocando caminho do cep-promise para usar o caminho correto da forma abaixo e com isto o `import cep from 'cep-promise'` deverá funcionar como o esperado:
+É possível configurar o `webpack.config.js` trocando caminho do cep-promise para usar o caminho correto da forma abaixo e com isto o `import cep from 'cep-as-promised'` deverá funcionar como o esperado:
 
 ```
   const path = require('path')
@@ -174,7 +162,7 @@ require('/dist/cep-promise-browser.min.js')
 #### Angular 2
 
 ``` ts
-import * as cep from 'cep-promise'
+import * as cep from 'cep-as-promised'
 
 cep('05010000')
   .then(console.log)

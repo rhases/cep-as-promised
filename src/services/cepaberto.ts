@@ -3,7 +3,7 @@
 import ServiceError from '../errors/service';
 
 export default function fetchCepAbertoService (cepWithLeftPad) {
-  const url = `https://cors.now.sh/http://www.cepaberto.com/api/v3/cep?cep=${cepWithLeftPad}`
+  const url = `http://www.cepaberto.com/api/v3/cep?cep=${cepWithLeftPad}`
   const options: RequestInit = {
     method: 'GET',
     mode: 'cors',
