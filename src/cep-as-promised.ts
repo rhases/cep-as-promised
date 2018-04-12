@@ -1,5 +1,7 @@
 'use strict'
 
+require('isomorphic-fetch');
+
 import fetchCorreios from './services/correios'
 import fetchViaCep from './services/viacep'
 import fetchCepAberto from './services/cepaberto'
@@ -54,8 +56,10 @@ function removeSpecialCharacters (cepRawValue) {
 }
 
 function leftPadWithZeros (cepCleanValue) {
-  return '0'.repeat(CEP_SIZE - cepCleanValue.length) + cepCleanValue
-  // return cepCleanValue;
+  for (var i = 0; i < CEP_SIZE - cepCleanValue.length; i++){
+    cepCleanValue = '0' + cepCleanValue;
+  }
+  return cepCleanValue;
 }
 
 function validateInputLength (cepWithLeftPad) {
