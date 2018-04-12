@@ -53,64 +53,6 @@ describe('cep-promise (unit)', () => {
     })
   })
 
-  describe('when invoked with an Array', () => {
-    it('should reject with "validation_error"', () => {
-      return cep([1, 2, 3])
-        .catch((error) => {
-          return expect(error)
-            .to.be.an.instanceOf(CepPromiseError)
-            .and.containSubset({
-              name: 'CepPromiseError',
-              message: 'Erro ao inicializar a instância do CepPromise.',
-              type: 'validation_error',
-              errors: [{
-                message: 'Você deve chamar o construtor utilizando uma String ou um Number.',
-                service: 'cep_validation'
-              }]
-            })
-        })
-    })
-  })
-
-  describe('when invoked with an Object', () => {
-    it('should reject with "validation_error"', () => {
-      return cep({ nintendo: true, ps: false, xbox: false })
-        .catch((error) => {
-          return expect(error)
-            .to.be.an.instanceOf(CepPromiseError)
-            .and.containSubset({
-              name: 'CepPromiseError',
-              message: 'Erro ao inicializar a instância do CepPromise.',
-              type: 'validation_error',
-              errors: [{
-                message: 'Você deve chamar o construtor utilizando uma String ou um Number.',
-                service: 'cep_validation'
-              }]
-            })
-        })
-    })
-  })
-
-  describe('when invoked with an Function', () => {
-    it('should reject with "validation_error"', () => {
-      return cep(function zelda () { return 'link' })
-        .catch((error) => {
-          return expect(error)
-            .to.be.an.instanceOf(CepPromiseError)
-            .and.containSubset({
-              name: 'CepPromiseError',
-              message: 'Erro ao inicializar a instância do CepPromise.',
-              type: 'validation_error',
-              errors: [{
-                message: 'Você deve chamar o construtor utilizando uma String ou um Number.',
-                service: 'cep_validation'
-              }]
-            })
-        })
-    })
-  })
-
-
   describe('when invoked with a valid "05010000" String', () => {
     it('should fulfill with correct address', () => {
       nock('https://apps.correios.com.br')

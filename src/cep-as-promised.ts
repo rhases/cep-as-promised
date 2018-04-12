@@ -9,29 +9,30 @@ import fetchCepAbertoBrowser from './services/cepaberto-browser'
 import CepPromiseError from './errors/cep-promise'
 import { any } from './utils/promise-any';
 import * as Q from 'q';
-
+import { CEP } from './cep';
 const CEP_SIZE = 8
 
-export default function (cepRawValue) {
-  return Q.when(cepRawValue)
+export default function cep(cepRawValue: string | number): Promise<CEP>{
+  let promise = Q.when(cepRawValue)
     .then(validateInputType)
     .then(removeSpecialCharacters)
     .then(validateInputLength)
     .then(leftPadWithZeros)
     .then(fetchCepFromServices)
-    .catch(handleServicesError)
-    .catch(throwApplicationError)
+    .catch<CEP>(handleServicesError)
+    .catch<CEP>(throwApplicationError)
+  return promise as Promise<CEP>;
 }
 
-export function cepBrowser(cepRawValue) {
+export function cepBrowser(cepRawValue: string | number): Promise<CEP> {
   return Q.when(cepRawValue)
     .then(validateInputType)
     .then(removeSpecialCharacters)
     .then(validateInputLength)
     .then(leftPadWithZeros)
     .then(fetchCepFromServicesBrowser)
-    .catch(handleServicesError)
-    .catch(throwApplicationError)
+    .catch<CEP>(handleServicesError)
+    .catch<CEP>(throwApplicationError)
 }
 
 function validateInputType (cepRawValue) {
@@ -77,8 +78,8 @@ function validateInputLength (cepWithLeftPad) {
   })
 }
 
-function fetchCepFromServices (cepWithLeftPad) {
-  return any([
+function fetchCepFromServices (cepWithLeftPad): Promise<CEP> {
+  return  any<CEP>([
     fetchCorreios(cepWithLeftPad),
     fetchViaCep(cepWithLeftPad),
     fetchCepAberto(cepWithLeftPad) 
@@ -92,7 +93,7 @@ function fetchCepFromServicesBrowser(cepWithLeftPad) {
   ])
 }
 
-function handleServicesError (aggregatedErrors) {
+function handleServicesError(aggregatedErrors): Q.IWhenable<CEP> {
   if (aggregatedErrors.length !== undefined) {
     throw new CepPromiseError({
       message: 'Todos os serviços de CEP retornaram erro.',
@@ -103,6 +104,6 @@ function handleServicesError (aggregatedErrors) {
   throw aggregatedErrors
 }
 
-function throwApplicationError ({ message, type, errors }) {
+function throwApplicationError({ message, type, errors }): Q.IWhenable<CEP> {
   throw new CepPromiseError({ message, type, errors })
 }

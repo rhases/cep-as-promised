@@ -5,5 +5,3 @@ export declare interface CEP {
     street: string,
     neighborhood: string
 }
-
-export declare function cep(cep: string | number): Promise<CEP>

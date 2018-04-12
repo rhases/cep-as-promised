@@ -1,10 +1,10 @@
 'use strict'
 import * as Q from 'q';
 
-const reverse = (promise) => {
-    let defer = Q.defer();
+function reverse<T> (promise):Promise<T> {
+    let defer = Q.defer<T>();
     promise.then(defer.reject, defer.resolve)
     return defer.promise;
 }
 
-export function any(iterable) { return reverse(Q.all([...iterable].map(reverse))) }
+export function any<T>(iterable):Promise<T> { return reverse(Q.all([...iterable].map(reverse))) }
